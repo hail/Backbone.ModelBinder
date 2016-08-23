@@ -184,6 +184,7 @@
 
         _bindModelToView: function () {
             this._model.on('change', this._onModelChange, this);
+            this._model.on('nested-change', this._onModelChange, this);
 
             if(this._options['initialCopyDirection'] === Backbone.ModelBinder.Constants.ModelToView){
                 this.copyModelAttributesToView();
@@ -235,6 +236,7 @@
         _unbindModelToView: function(){
             if(this._model){
                 this._model.off('change', this._onModelChange);
+                this._model.off('nested-change', this._onModelChange);
                 this._model = undefined;
             }
         },
