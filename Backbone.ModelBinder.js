@@ -184,7 +184,6 @@
 
         _bindModelToView: function () {
             this._model.on('change', this._onModelChange, this);
-            this._model.on('nested-change', this._onModelChange, this);
 
             if(this._options['initialCopyDirection'] === Backbone.ModelBinder.Constants.ModelToView){
                 this.copyModelAttributesToView();
@@ -236,7 +235,6 @@
         _unbindModelToView: function(){
             if(this._model){
                 this._model.off('change', this._onModelChange);
-                this._model.off('nested-change', this._onModelChange);
                 this._model = undefined;
             }
         },
@@ -268,7 +266,7 @@
             for(elBindingCount = 0; elBindingCount < elBindings.length; elBindingCount++){
                 elBinding = elBindings[elBindingCount];
                 if (this._isBindingUserEditable(elBinding)) {
-                    this._copyViewToModel(elBinding, el);
+                    this._copyViewToModel(elBinding, el, true);
                 }
             }
         },
@@ -434,7 +432,7 @@
             }
         },
 
-        _copyViewToModel: function (elementBinding, el) {
+        _copyViewToModel: function (elementBinding, el, preventFeedback) {
             var result, value, convertedValue;
 
             if (!el._isSetting) {
@@ -446,7 +444,7 @@
                 if(result && elementBinding.converter){
                     value = this._model.get(elementBinding.attributeBinding.attributeName);
                     convertedValue = this._getConvertedValue(Backbone.ModelBinder.Constants.ModelToView, elementBinding, value);
-                    this._setEl($(el), elementBinding, convertedValue);
+                    if (!preventFeedback) this._setEl($(el), elementBinding, convertedValue);
                 }
             }
         },
